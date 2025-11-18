@@ -1,39 +1,45 @@
 // FinalProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+
+
+// Melina Campana
 
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
+struct bookData {
+
+
+
+};
+
 int main()
 {
-   cout << "Hello World!\n";
+	string bookName; //holds book name
+	
+	ofstream outputFile("bookInfo.txt", ios::app); //opens book information file 
+												  //and enables appended text 
 
-   ofstream outputFile("bookInfo.txt"); //opens book information file
-
-   if (outputFile.is_open()) {    //checks if book information file is open
+	if (outputFile.is_open()) {    //checks if book information file is open
 	   cout << "Book Information file open" << endl;
-   }
-   else {
+	}
+	else {
 	   cout << "File not opened" << endl;
-   }
-
-   if (outputFile.is_open()) { 
-	   outputFile << "Hello World" << endl;
-   }
-   else {
+	}
+	
+	cout << "enter book name: " << endl;
+	cin >> bookName;
+	
+	if (outputFile.is_open()) { 
+	   outputFile << bookName << endl;
+	   outputFile.close();  //closes book information file
+	}
+	else {
 	   cout << "File not opened" << endl;
-   }
-
-   outputFile.close(); //closes book information file
-
-
-
+	}
 
 }
-
-
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
