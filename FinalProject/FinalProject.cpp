@@ -10,13 +10,19 @@ using namespace std;
 
 struct bookData {
 
+	string bookTitle;
+	string authorName;
+	string bookGenre;
+	float bookRating;
 
-
+	int readingStartDate;
+	int readingEndDate;
+	string bookReview;
 };
 
 int main()
 {
-	string bookName; //holds book name
+	bookData book; //Current book
 	
 	ofstream outputFile("bookInfo.txt", ios::app); //opens book information file 
 												  //and enables appended text 
@@ -29,10 +35,10 @@ int main()
 	}
 	
 	cout << "enter book name: " << endl;
-	cin >> bookName;
+	cin >> book.bookTitle;
 	
 	if (outputFile.is_open()) { 
-	   outputFile << bookName << endl;
+	   outputFile << book.bookTitle << endl;
 	   outputFile.close();  //closes book information file
 	}
 	else {
