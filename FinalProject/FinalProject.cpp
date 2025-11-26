@@ -10,6 +10,7 @@
 using namespace std;
 
 void bubbleSort(string arr[], int n);
+void newEntry();
 
 struct bookData {
 
@@ -25,6 +26,33 @@ struct bookData {
 
 int main()
 {
+	
+	newEntry();
+
+	return 0;
+}
+
+void bubbleSort(string arr[], int n) {
+	bool swapped;
+	for (int i = 0; i < n - 1; ++i) {
+		swapped = false;
+		for (int j = 0; j < n - 1 - i; ++j) {
+			// Compare adjacent strings lexicographically
+			if (arr[j] > arr[j + 1]) {
+				// If they are in the wrong order, swap them
+				swap(arr[j], arr[j + 1]);
+				swapped = true;
+			}
+		}
+		// If no two elements were swapped by inner loop, then array is sorted
+		if (!swapped) {
+			break;
+		}
+	}
+}
+
+void newEntry() {
+
 	const int MAX_SIZE = 50;
 	string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
 	bookData book; //Current book
@@ -33,22 +61,22 @@ int main()
 
 	// OUTPUT FILE CODE 
 	ofstream outputFile("bookInfo.txt", ios::app); //opens book output information file 
-												  //and enables appended text 
+	//and enables appended text 
 
 	if (outputFile.is_open()) {    //checks if book output information file is open
-	   cout << "Output file opened" << endl;
+		cout << "Output file opened" << endl;
 	}
 	else {
-	   cout << "Output File not opened" << endl;
+		cout << "Output File not opened" << endl;
 	}
-	
+
 	cout << "enter book name: " << endl;
 	getline(cin, book.bookTitle);
-	
-	if (outputFile.is_open()) { 
+
+	if (outputFile.is_open()) {
 		outputFile << book.bookTitle << endl;//puts title in file
 	}
-	
+
 	outputFile.close();  //closes book information file
 	// ^^^ WORKS DONT CHANGE 
 
@@ -56,7 +84,7 @@ int main()
 
 	// INPUT FILE CODE
 	ifstream inputFile("bookInfo.txt");//opens book information input file 
-									  //and enables appended text 
+	//and enables appended text 
 
 
 	if (inputFile.is_open()) {    //checks if book information input file is open
@@ -104,26 +132,6 @@ int main()
 	sortOutputFile.close();  //closes book information file
 
 }
-
-void bubbleSort(string arr[], int n) {
-	bool swapped;
-	for (int i = 0; i < n - 1; ++i) {
-		swapped = false;
-		for (int j = 0; j < n - 1 - i; ++j) {
-			// Compare adjacent strings lexicographically
-			if (arr[j] > arr[j + 1]) {
-				// If they are in the wrong order, swap them
-				swap(arr[j], arr[j + 1]);
-				swapped = true;
-			}
-		}
-		// If no two elements were swapped by inner loop, then array is sorted
-		if (!swapped) {
-			break;
-		}
-	}
-}
-
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
