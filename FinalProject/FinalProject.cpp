@@ -159,8 +159,7 @@ char userPrompt() {
 	cout << "if you want to exit, enter 'c'\n";
 
 	cin >> letter;
-	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear leftover newline
-
+	cin.ignore(); // clear leftover newline
 	return letter;
 }
 
