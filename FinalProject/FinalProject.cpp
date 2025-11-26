@@ -11,23 +11,41 @@ using namespace std;
 
 void bubbleSort(string arr[], int n);
 void newEntry();
+char userPrompt();
 
 struct bookData {
 
 	string bookTitle;
-	string authorName;
+
+	/*string authorName;
 	string bookGenre;
 	float bookRating;
 
 	int readingStartDate;
 	int readingEndDate;
-	string bookReview;
+	string bookReview;*/
 };
 
 int main()
 {
+	char userChoice = userPrompt();
+
+	if ( userChoice == 'a') {
 	
-	newEntry();
+		newEntry();
+	}
+	else if (userChoice == 'b') {
+	
+	}
+	else if (userChoice == 'c') {
+
+		return 0;
+	}
+	else {
+
+		cout << "invalid input" << endl;
+	}
+	
 
 	return 0;
 }
@@ -57,7 +75,8 @@ void newEntry() {
 	string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
 	bookData book; //Current book
 
-
+	cout << "enter book name: " << endl;
+	getline(cin, book.bookTitle);
 
 	// OUTPUT FILE CODE 
 	ofstream outputFile("bookInfo.txt", ios::app); //opens book output information file 
@@ -69,9 +88,6 @@ void newEntry() {
 	else {
 		cout << "Output File not opened" << endl;
 	}
-
-	cout << "enter book name: " << endl;
-	getline(cin, book.bookTitle);
 
 	if (outputFile.is_open()) {
 		outputFile << book.bookTitle << endl;//puts title in file
@@ -131,6 +147,21 @@ void newEntry() {
 
 	sortOutputFile.close();  //closes book information file
 
+}
+
+char userPrompt() {
+
+	char letter;
+
+	cout << "welcome to your book log! :D\n" << endl;
+	cout << "if you want to add a new entry, enter 'a'\n";
+	cout << "if you want to search for an old entry, enter 'b'\n";
+	cout << "if you want to exit, enter 'c'\n";
+
+	cin >> letter;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear leftover newline
+
+	return letter;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
