@@ -19,8 +19,12 @@
 
 using namespace std;
 
+const int MAX_SIZE = 50;
+string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
+
 //Function Prototypes
 void bubbleSort(string arr[], int n);
+
 void newBookEntry();
 char userPrompt();
 
@@ -29,13 +33,16 @@ struct bookData {
 
 	string bookTitle;
 	string authorName;
-	/*string bookGenre;
-	float bookRating;
+	string bookGenre;
+	int bookRating;
 
-	int readingStartDate;
-	int readingEndDate;
-	string bookReview;*/
+	//int readingStartDate;
+//	int readingEndDate;
+	//string bookReview;
 };
+
+
+bookData orderByTitle(bookData currBook, bookData firstName, bookData lastName);
 
 int main()
 {
@@ -80,10 +87,33 @@ void bubbleSort(string arr[], int n) {
 	}
 }
 
+
+int binarySearch(int array[], int size, int value)
+{
+	int first = 0, // First array element
+		last = size - 1, // Last array element
+		middle, // Mid point of search
+		position = -1; // Position of search value
+	bool found = false; // Flag
+	while (!found && first <= last)
+	{
+		middle = (first + last) / 2; // Calculate mid point
+		if (array[middle] == value) // If value is found at mid
+		{
+			found = true;
+			position = middle;
+		}
+		else if (array[middle] > value) // If value is in lower half
+			last = middle - 1;
+		else
+			first = middle + 1; // If value is in upper half
+	}
+	return position;
+}
+
+
 void newBookEntry() {
 
-	const int MAX_SIZE = 50;
-	string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
 	bookData book; //Current book
 	bookData authorFirstName;
 	bookData authorLastName;
@@ -95,8 +125,71 @@ void newBookEntry() {
 	cin >> authorFirstName.authorName;
 	cin >> authorLastName.authorName;
 
+	orderByTitle(book, authorFirstName, authorLastName);
+
+}
+
+void searchForOldEntry() {
+
+	bool found = false;
+
+	// INPUT FILE CODE
+	ifstream inputFile("bookTitlesSorted.txt");//opens book information input file 
+	//and enables appended text 
+
+
+	if (inputFile.is_open()) {    //checks if book information input file is open
+		cout << "Input file opened" << endl;
+	}
+	else {
+		cout << "Input file not opened" << endl;
+	}
+
+
+	bool found = false;
+	int spaceCount = 0;
+	char space = ' ';
+	char letter;
+	string line;
+	bookData book;
+
+	while (found = false) {
+
+		while (getline(inputFile,line )) {
+
+			for (int i = 0; i < line.length(); ++i) {
+				letter = line[i]; // Access character at index i
+
+				for (int i = 0; i < 3; ++i) {
+					if (!(letter = space)) {
+						cin >> book.bookTitle;
+
+					}
+				}
+			
+			}
+		}
+	}
+
+
+
+	inputFile.close();  //closes book information file
+	// ^^^ ALSO WORKS
+}
+
+bookData orderByTitle(bookData currBook, bookData firstName, bookData lastName) {
+
+	bookData genre;
+	bookData rating;
+
+	cout << "what is the books genre ?" << endl;
+	cin >> genre.bookGenre;
+
+	cout << "what rating would you give the book ?" << endl;
+	cin >> rating.bookRating;
+
 	// OUTPUT FILE CODE 
-	ofstream outputFile("bookInfo.txt", ios::app); //opens book output information file 
+	ofstream outputFile("bookTitles.txt", ios::app); //opens book output information file 
 	//and enables appended text 
 
 	if (outputFile.is_open()) {    //checks if book output information file is open
@@ -107,7 +200,9 @@ void newBookEntry() {
 	}
 
 	if (outputFile.is_open()) {
-		outputFile << book.bookTitle << authorLastName.authorName << authorFirstName.authorName << endl;//puts title in file
+		outputFile << currBook.bookTitle << "   "  << lastName.authorName << "   " << firstName.authorName 
+			
+			<< "   "  << genre.bookGenre << "   " << rating.bookRating << endl;//puts title in file
 	}
 
 	outputFile.close();  //closes book information file
@@ -116,7 +211,7 @@ void newBookEntry() {
 
 
 	// INPUT FILE CODE
-	ifstream inputFile("bookInfo.txt");//opens book information input file 
+	ifstream inputFile("bookTitles.txt");//opens book information input file 
 	//and enables appended text 
 
 
@@ -148,7 +243,7 @@ void newBookEntry() {
 
 	//SORTED FILE CODE
 
-	ofstream sortOutputFile("sortedBookInfo.txt"); //opens book output information file 
+	ofstream sortOutputFile("bookTitlesSorted.txt"); //opens book output information file 
 	//and enables appended text 
 
 	if (sortOutputFile.is_open()) {    //checks if book output information file is open
@@ -164,7 +259,9 @@ void newBookEntry() {
 
 	sortOutputFile.close();  //closes book information file
 
+	return currBook;
 }
+
 
 char userPrompt() {
 
