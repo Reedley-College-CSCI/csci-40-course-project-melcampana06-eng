@@ -4,8 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
-#include < cstddef >
+//#include <sstream>
+//#include < cstddef >
+
 
 
 using namespace std;
@@ -15,13 +16,15 @@ string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
 
 //Function Prototypes
 char userPrompt();
-void newBookEntry();
-string searchForOldEntry();
+
 void bubbleSort(string arr[], int n);
 bool binarySearch(string array[], int size, string value);
+
+void newBookEntry();
+string searchForOldEntry();
+
 string getPart(string line, int index);
-
-
+void editPastEntry();
 
 //Struct for all data related to the books
 struct bookData {
@@ -30,10 +33,7 @@ struct bookData {
 	string authorName;
 	string bookGenre;
 	int bookRating = 0;
-
-	//int readingStartDate;
-//	int readingEndDate;
-	//string bookReview;
+	string bookReview;
 };
 
 
@@ -42,28 +42,21 @@ int main()
 	char userChoice = userPrompt();
 
 	if ( userChoice == 'a') {
-
 		newBookEntry();
 	}
 	else if (userChoice == 'b') {
-
 		searchForOldEntry();
-
 	}
 	else if (userChoice == 'c') {
-
-		
+		editPastEntry();
 	}
 	else if (userChoice == 'd') {
-
 		return 0;
 	}
 	else {
-
 		cout << "invalid input" << endl;
 	}
 	
-
 	return 0;
 }
 
@@ -134,7 +127,7 @@ bool binarySearch(string array[], int size, string value)
 		else
 			first = middle + 1; // If value is in upper half
 	}
-	if (found = true) { cout << "we good !! :P" << endl; }
+	if (found) { cout << "we good !! :P" << endl; }
 
 	return found;
 }
@@ -143,31 +136,37 @@ bool binarySearch(string array[], int size, string value)
 void newBookEntry() {
 
 	bookData book; //Current book
-	bookData authorFirstName;
-	bookData authorLastName;
+
+	char letter = 'y';
+
 
 	cout << "enter book name: " << endl;
 	getline(cin, book.bookTitle);
 
 	cout << "enter author first and last name: " << endl;
-	cin >> authorFirstName.authorName;
-	cin >> authorLastName.authorName;
-
-	//orderByTitle(book, authorFirstName, authorLastName);
-
-
-	bookData genre;
-	bookData rating;
+	getline(cin, book.authorName);
 
 	cout << "what is the books genre ?" << endl;
-	cin >> genre.bookGenre;
+	getline(cin, book.bookGenre);
 
 	cout << "what rating would you give the book ?" << endl;
-	cin >> rating.bookRating;
+	cin >> book.bookRating;
+
+	cout << "would you like to add a review ? " << endl 
+		 << "('Y' or 'y' for yes, any other key for no)" << endl;
+	cin >> letter;
+
+	if (letter == 'y' || letter == 'Y') { 
+		cin.ignore();
+		cout << "Type Review: " << endl;
+		getline(cin, book.bookReview); 
+	}
+
 
 	// OUTPUT FILE CODE 
+
 	ofstream outputFile("bookTitles.txt", ios::app); //opens book output information file 
-	//and enables appended text 
+													 //and enables appended text 
 
 	if (outputFile.is_open()) {    //checks if book output information file is open
 		cout << "Output file opened" << endl;
@@ -176,20 +175,18 @@ void newBookEntry() {
 		cout << "Output File not opened" << endl;
 	}
 
-	if (outputFile.is_open()) {
-		outputFile << book.bookTitle << "   " << authorFirstName.authorName << "   " << authorLastName.authorName
-
-			<< "   " << genre.bookGenre << "   " << rating.bookRating << endl;//puts title in file
+	if (outputFile.is_open()) {   //puts info in file
+		outputFile << book.bookTitle << "   " << book.authorName << "   " << book.bookGenre 
+			       << "   " << book.bookRating << "   " << book.bookReview << endl;
 	}
 
 	outputFile.close();  //closes book information file
-	// ^^^ WORKS DONT CHANGE 
 
 
 
 	// INPUT FILE CODE
 	ifstream inputFile("bookTitles.txt");//opens book information input file 
-	//and enables appended text 
+									     //and enables appended text 
 
 
 	if (inputFile.is_open()) {    //checks if book information input file is open
@@ -200,29 +197,28 @@ void newBookEntry() {
 	}
 
 	int count = 0;
-	while (count < MAX_SIZE && getline(inputFile, bookArray[count])) {
-		cout << bookArray[count] << endl;
+	while (count < MAX_SIZE && getline(inputFile, bookArray[count])) {  //populates array
+		cout << bookArray[count] << endl;	//DELETE THIS			    // turns everything lowercase
 		bookArray[count] = toLower(bookArray[count]);
 		count++;
 	}
 	inputFile.close();  //closes book information file
-	// ^^^ ALSO WORKS
-
-
+	
 
 
 	bubbleSort(bookArray, count);
 
-	cout << endl << "Sorted Check: " << endl;
+
+
+	cout << endl << "Sorted Check: " << endl; //DELETE THIS
 	for (int i = 0; i < count; ++i) {
 		cout << bookArray[i] << endl;
 	}
 
 
 	//SORTED FILE CODE
-
 	ofstream sortOutputFile("bookTitlesSorted.txt"); //opens book output information file 
-	//and enables appended text 
+													//and enables appended text 
 
 	if (sortOutputFile.is_open()) {    //checks if book output information file is open
 		cout << "Sorted Output file opened" << endl;
@@ -232,7 +228,7 @@ void newBookEntry() {
 	}
 
 	for (int i = 0; i < count; ++i) {
-		sortOutputFile << bookArray[i] << endl;
+		sortOutputFile << bookArray[i] << endl; //puts sorted array into new file
 	}
 
 	sortOutputFile.close();  //closes book information file
@@ -254,19 +250,18 @@ string searchForOldEntry() {
 	string line;
 
 	while (count < MAX_SIZE && getline(inputFile, line)) {
-		bookArray[count] = toLower(extractTitle(line));
-		count++;
+		bookArray[count] = toLower(extractTitle(line));   //Extracts book titles into array
+		count++;										  //turns it lower case
 	}
 
 	inputFile.close();
 
 	cout << "What title are you searching for? " << endl;
-	cin.ignore();
-	getline(cin, title);
-	title = toLower(title);
+	getline(cin, title);    // gets title
+	title = toLower(title); //turns it lower case
 
 	// Perform binary search
-	bool result = binarySearch(bookArray, count, title);
+	bool result = binarySearch(bookArray, count, title); 
 
 	if (result)
 		cout << "Book found!\n";
@@ -274,23 +269,32 @@ string searchForOldEntry() {
 		cout << "Book NOT found.\n";
 
 
+	inputFile.open("bookTitlesSorted.txt"); 
+	
+	
+	while (getline(inputFile, line)) {
+		
+		string bookName = toLower(getPart(line, 0));
 
-	inputFile.open("bookTitlesSorted.txt"); // <-- FIX: reopen 
-	getline(inputFile, line);
+		if (title == bookName) {
 
-	string bookName = getPart(line, 0);
-	string authorName = getPart(line, 1);
-	string genre = getPart(line, 2);
-	string rating = getPart(line, 3);
+			bookName = getPart(line, 0);
+			string authorName = getPart(line, 1);
+			string genre = getPart(line, 2);
+			string rating = getPart(line, 3);
+			string review = getPart(line, 4);
 
-	//ss >> book.bookTitle >> book.authorName >> book.bookGenre >> book.bookRating; 
-	cout << "Title: " << bookName << endl
-		<< "Author: " << authorName << endl
-		<< "Genre: " << genre << endl
-		<< "Rating: " << rating << endl;
-	cout << endl;
-	return title;
+			cout << "Title: " << bookName << endl;
+			cout << "Author: " << authorName << endl;
+			cout << "Genre: " << genre << endl;
+			cout << "Rating: " << rating << "/5" << endl;
+			cout << "review: " << review << endl;
+			cout << endl;
+		}
+	}
+
 	inputFile.close();
+	return title;
 }
 
 
@@ -309,4 +313,78 @@ string getPart(string line, int index) {
 		return line;   // last field (safe)
 
 	return line.substr(0, pos);
+}
+
+
+void editPastEntry() {
+
+	string titleToEdit;
+	cout << "Enter the title you want to edit: " << endl;
+	getline(cin, titleToEdit);
+
+	string title = toLower(titleToEdit);
+
+	ifstream inputFile("bookTitlesSorted.txt");
+	ofstream tempFile("temp_edit.tmp");
+
+	if (!inputFile || !tempFile) {
+		cout << "Error opening file." << endl;
+	}
+
+	string line;
+	bool found = false;
+
+	while (getline(inputFile, line)) {
+
+		string currentTitle = toLower(getPart(line, 0));
+
+		if (currentTitle == title) {
+
+			found = true;
+
+			cout << "\nEntry found. Please enter new details.\n";
+
+			bookData book;
+
+			cout << "New Title: ";
+			getline(cin, book.bookTitle);
+
+			cout << "New Author: ";
+			getline(cin, book.authorName);
+
+			cout << "New Genre: ";
+			getline(cin, book.bookGenre);
+
+			cout << "New Rating: ";
+			cin >> book.bookRating;
+			cin.ignore();
+
+			cout << "New Review: ";
+			getline(cin, book.bookReview);
+
+			// Write updated entry to temp file
+			tempFile << book.bookTitle << "   "
+				<< book.authorName << "   "
+				<< book.bookGenre << "   "
+				<< book.bookRating << "   "
+				<< book.bookReview << endl;
+
+		}
+		else {
+			tempFile << line << endl;   // keep original line
+		}
+	}
+
+	inputFile.close();
+	tempFile.close();
+
+	if (found) {
+		remove("bookTitlesSorted.txt");
+		rename("temp_edit.tmp", "bookTitlesSorted.txt");
+		cout << "Entry updated successfully.\n";
+	}
+	else {
+		cout << "Entry NOT found. No changes made.\n";
+		remove("temp_edit.tmp");
+	}
 }
