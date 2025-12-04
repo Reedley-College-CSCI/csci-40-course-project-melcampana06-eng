@@ -1,13 +1,11 @@
-// FinalProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
 // Melina Campana
 
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include < cstddef >
 
 
 using namespace std;
@@ -21,6 +19,8 @@ void newBookEntry();
 string searchForOldEntry();
 void bubbleSort(string arr[], int n);
 bool binarySearch(string array[], int size, string value);
+string getPart(string line, int index);
+
 
 
 //Struct for all data related to the books
@@ -83,10 +83,11 @@ char userPrompt() {
 
 	char letter;
 
-	cout << "welcome to your book log! :D\n" << endl;
+	cout << "welcome to your book log!\n" << endl;
 	cout << "if you want to add a new entry, enter 'a'\n";
 	cout << "if you want to search for an old entry, enter 'b'\n";
-	cout << "if you want to exit, enter 'c'\n";
+	cout << "if you want edit a past entry, enter 'c'\n";
+	cout << "if you want to exit, enter 'd'\n";
 
 	cin >> letter;
 	cin.ignore(); // clear leftover newline
@@ -133,7 +134,7 @@ bool binarySearch(string array[], int size, string value)
 		else
 			first = middle + 1; // If value is in upper half
 	}
-	if (found = true) { cout << "we good !! :P"; }
+	if (found = true) { cout << "we good !! :P" << endl; }
 
 	return found;
 }
@@ -176,7 +177,7 @@ void newBookEntry() {
 	}
 
 	if (outputFile.is_open()) {
-		outputFile << book.bookTitle << "   " << authorLastName.authorName << "   " << authorFirstName.authorName
+		outputFile << book.bookTitle << "   " << authorFirstName.authorName << "   " << authorLastName.authorName
 
 			<< "   " << genre.bookGenre << "   " << rating.bookRating << endl;//puts title in file
 	}
@@ -243,6 +244,7 @@ string searchForOldEntry() {
 
 	bool found = false;
 	string title;
+	bookData book;
 
 	// INPUT FILE CODE
 	ifstream inputFile("bookTitlesSorted.txt");//opens book information input file 
@@ -255,9 +257,10 @@ string searchForOldEntry() {
 		bookArray[count] = toLower(extractTitle(line));
 		count++;
 	}
+
 	inputFile.close();
 
-	cout << "What title are you searching for? ";
+	cout << "What title are you searching for? " << endl;
 	cin.ignore();
 	getline(cin, title);
 	title = toLower(title);
@@ -270,6 +273,40 @@ string searchForOldEntry() {
 	else
 		cout << "Book NOT found.\n";
 
+
+
+	inputFile.open("bookTitlesSorted.txt"); // <-- FIX: reopen 
+	getline(inputFile, line);
+
+	string bookName = getPart(line, 0);
+	string authorName = getPart(line, 1);
+	string genre = getPart(line, 2);
+	string rating = getPart(line, 3);
+
+	//ss >> book.bookTitle >> book.authorName >> book.bookGenre >> book.bookRating; 
+	cout << "Title: " << bookName << endl
+		<< "Author: " << authorName << endl
+		<< "Genre: " << genre << endl
+		<< "Rating: " << rating << endl;
+	cout << endl;
 	return title;
+	inputFile.close();
 }
 
+
+string getPart(string line, int index) {
+	string delim = "   ";
+	size_t pos;
+
+	for (int i = 0; i < index; i++) {
+		pos = line.find(delim);
+		if (pos == string::npos ) return "";   // <-- prevent crash
+		line = line.substr(pos + delim.length());
+	}
+
+	pos = line.find(delim);
+	if (pos == string::npos)
+		return line;   // last field (safe)
+
+	return line.substr(0, pos);
+}
