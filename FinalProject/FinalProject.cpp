@@ -1,5 +1,5 @@
 
-// Melina Campana
+//Melina Campana
 
 /*
 This program takes in information about the users current read and logs it. 
