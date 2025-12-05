@@ -1,4 +1,10 @@
+
 // Melina Campana
+
+/*
+This program takes in information about the users current read and logs it. 
+The user is able to revist this log and edit it.
+*/
 
 #include <iostream>
 #include <fstream>
@@ -6,7 +12,7 @@
 
 using namespace std;
 
-const int MAX_SIZE = 50;
+const int MAX_SIZE = 100;
 string bookArray[MAX_SIZE]; //array containg book titles, 50 max size
 
 //Function Prototypes
@@ -53,17 +59,22 @@ int main()
 	return 0;
 }
 
-string toLower(string s) {
+string toLower(string s) { 
+	//makes each char in string s lower case
 	for (char& c : s)
 		c = tolower(c);
 	return s;
 }
 
 string capitalizeWords(string s) {
-	bool capNext = true;
 
+	bool capNext = true; //when to capitalize
+
+	//checks if c in string s is empty space
+	//if true, next letter needs to be capitalized
+	//else capNext is false
 	for (char& c : s) {
-		if (isspace(c)) {
+		if (isspace(c)) {  
 			capNext = true;
 		}
 		else if (capNext) {
@@ -150,12 +161,12 @@ void newBookEntry() {
 	cout << "what is the books genre ?" << endl;   //prompts user for book genre
 	getline(cin, book.bookGenre);
 
-	cout << "what rating would you give the book ?" << endl;  //prompts user for rating they give the book
+	cout << "what rating would you give the book (1 to 5) ?" << endl;  //prompts user for rating they give the book
 	cin >> book.bookRating;
 
 	do { 
 		cout << "would you like to add a review ? " << endl				// asks user if they was to write a review
-			<< "('Y' or 'y' for yes, any other key for no)" << endl;
+			<< "('Y' or 'y' for yes, 'n' or 'N' no)" << endl;
 		cin >> letter;
 
 		if (letter == 'y' || letter == 'Y') {   //uses 'y' or 'Y' to represent 'yes'
